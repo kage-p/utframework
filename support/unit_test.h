@@ -1,18 +1,15 @@
 #pragma once
 #include <string>
-#include "gmock/gmock.h"
+#include <gtest/gtest.h>
 
 namespace UnitTestSupport
 {
-	class CUnitTest
+	class CUnitTest : public testing::Test
 	{
-
-	public:
-		// implement by test classes
-		virtual void runAllTests() = 0;
 
 	protected:
 
+        // test support functions
 		static std::wstring getExecutablePath();
 		static std::wstring getFileData(std::wstring file);
 		static void logText(std::string text);
@@ -21,9 +18,6 @@ namespace UnitTestSupport
 		static std::wstring getTestPath(std::wstring base);
 		static void setupFolder(std::wstring path);
 		static void cleanupFolder(std::wstring path);
-
-		static void ASSERT_ISTRUE(bool expr, std::string msg = "");
-		static void ASSERT_EQUALS(int expected, int actual, std::string msg = "");
 
 	};
 }

@@ -54,38 +54,6 @@ std::wstring CUnitTest::getFileData(const std::wstring file)
 //-----------------------------------------------------------------------------
 // [TestSupport]
 //
-//
-//-----------------------------------------------------------------------------
-void CUnitTest::ASSERT_ISTRUE(bool expr, std::string msg)
-{
-   std::string output;
-   if (!expr) {
-      output = "ASSERT_ISTRUE ERROR: Was false. " + msg + "\n";
-      // throw new std::exception(msg.c_str());
-   }
-   logText(output);   
-}
-
-
-//-----------------------------------------------------------------------------
-// [TestSupport]
-//
-//
-//-----------------------------------------------------------------------------
-void CUnitTest::ASSERT_EQUALS(int expected, int actual, std::string msg)
-{
-    std::string output;
-    if (actual != expected) {
-        output = "ASSERT_EQUALS: ERROR: Actual: " + std::to_string(actual) + ", expected: " + std::to_string(expected) + ". " + msg + "\n";
-        // throw new std::exception(msg.c_str());
-    }
-    logText(output);
-}
-
-
-//-----------------------------------------------------------------------------
-// [TestSupport]
-//
 // Logs a text string to the debug console
 //-----------------------------------------------------------------------------
 void CUnitTest::logText(std::string text)
@@ -93,6 +61,7 @@ void CUnitTest::logText(std::string text)
     // write to debug output
     OutputDebugStringA(text.c_str());
 }
+
 
 //-----------------------------------------------------------------------------
 // [TestSupport]
