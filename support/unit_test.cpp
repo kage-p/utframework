@@ -1,7 +1,4 @@
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
 #include "unit_test.h"
 
 #include <string>
@@ -11,6 +8,11 @@
 #include <codecvt>
 
 #include <filesystem>
+
+#ifdef _WIN32
+    #define WIN32_LEAN_AND_MEAN
+    #include <Windows.h>
+#endif
 
 using namespace UnitTestSupport;
 using namespace std::experimental; // for vs2015
@@ -22,6 +24,7 @@ using namespace std::experimental; // for vs2015
 //-----------------------------------------------------------------------------
 std::wstring CUnitTest::getExecutablePath()
 {
+#ifdef _WIN32
     std::wstring localPath;
     localPath.resize(MAX_PATH + 1);
     GetModuleFileNameW(
@@ -32,6 +35,9 @@ std::wstring CUnitTest::getExecutablePath()
     int n = localPath.find_last_of('\\');
     if (n > 0) localPath.resize(n);
     return localPath;
+#else
+    return filesystem::current_path();
+#endif
 }
 
 
@@ -40,14 +46,41 @@ std::wstring CUnitTest::getExecutablePath()
 //
 // Returns contents of a text file
 //-----------------------------------------------------------------------------
-std::wstring CUnitTest::getFileData(const std::wstring file)
+std::wstring CUnitTest::getTextFileData(const std::wstring fileName)
 {
-    std::ifstream t(file);
-    std::stringstream buffer;
-    buffer << t.rdbuf();
-    typedef std::codecvt_utf8<wchar_t> convert_type;
-    std::wstring_convert<convert_type, wchar_t> converter;
-    return converter.from_bytes(buffer.str());
+    std::ifstream file(fileName);
+    if (file.is_open() )
+    {
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        typedef std::codecvt_utf8<wchar_t> convert_type;
+        std::wstring_convert<convert_type, wchar_t> converter;
+        return converter.from_bytes(buffer.str());
+    }
+    return false;
+}
+
+
+//-----------------------------------------------------------------------------
+// [TestSupport]
+//
+// Returns contents of a text file in a vector with each item representing a line
+//-----------------------------------------------------------------------------
+std::vector<std::wstring> CUnitTest::getTextFileList(const std::wstring fileName)
+{
+    std::vector<std::wstring> results;
+    std::ifstream file(fileName);
+    if (file.is_open())
+    {
+        std::string line;
+        while (std::getline(file, line))
+        {
+            typedef std::codecvt_utf8<wchar_t> convert_type;
+            std::wstring_convert<convert_type, wchar_t> converter;
+            results.push_back(converter.from_bytes(line));
+        }
+    }
+    return results;
 }
 
 
@@ -58,8 +91,11 @@ std::wstring CUnitTest::getFileData(const std::wstring file)
 //-----------------------------------------------------------------------------
 void CUnitTest::logText(std::string text)
 {
-    // write to debug output
+#ifdef _WIN32
     OutputDebugStringA(text.c_str());
+#else
+    std::cout << text;
+#endif
 }
 
 
@@ -70,8 +106,11 @@ void CUnitTest::logText(std::string text)
 //-----------------------------------------------------------------------------
 void CUnitTest::logText(std::wstring text)
 {
-    // write to debug output
+#ifdef _WIN32
     OutputDebugStringW(text.c_str());
+#else
+    std::wcout << text;
+#endif
 }
 
 
@@ -97,7 +136,7 @@ void CUnitTest::setupFolder(std::wstring path)
 {
     // clear export folder and recreate
     cleanupFolder(path);
-    filesystem::create_directory(path);
+    filesystem::create_directories(path);
 }
 
 
