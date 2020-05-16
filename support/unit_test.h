@@ -1,24 +1,25 @@
 #pragma once
 #include <string>
-#include <gtest/gtest.h>
+
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 namespace UnitTestSupport
 {
-	class CUnitTest : public testing::Test
-	{
-
-	protected:
+    class CUnitTest : public testing::Test
+    {
+    protected:
 
         // test support functions
-		static std::wstring getExecutablePath();
-		static std::wstring getTextFileData(std::wstring fileName);
-        static std::vector<std::wstring> getTextFileList(std::wstring fileName);
-        static void logText(std::string text);
-		static void logText(std::wstring text);
+        static std::wstring getExecutablePath();
+        static std::wstring getTextFileData(const std::wstring& fileName);
+        static std::vector<std::wstring> getTextFileList(const std::wstring& fileName);
+        static void logText(const std::string& text);
+        static void logText(const std::wstring& text);
 
-		static std::wstring getTestPath(std::wstring base);
-		static void setupFolder(std::wstring path);
-		static void cleanupFolder(std::wstring path);
+        static std::wstring getTestPath(const std::wstring& base);
+        static void setupFolder(const std::wstring& path);
+        static void cleanupFolder(const std::wstring& path);
 
-	};
+    };
 }
