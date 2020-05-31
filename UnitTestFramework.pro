@@ -15,7 +15,7 @@ INCLUDEPATH += \
 HEADERS += \
     support/unit_test.h
 
-SOURCES +=\
+SOURCES += \
     support/unit_test.cpp \
     gmock/src/gmock-all.cc \
     gtest/src/gtest-all.cc

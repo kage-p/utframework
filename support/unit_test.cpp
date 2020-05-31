@@ -7,15 +7,21 @@
 #include <locale>
 #include <codecvt>
 
-#include <filesystem>
-
 #ifdef _WIN32
     #define WIN32_LEAN_AND_MEAN
     #include <Windows.h>
 #endif
 
+#if 0 // cpp17
+#include <filesystem>
+using namespace std::filesystem;
+#else
+#include <experimental/filesystem>
+using namespace std::experimental::filesystem;
+#endif
+
 using namespace UnitTestSupport;
-using namespace std::experimental; // for vs2015
+
 
 //-----------------------------------------------------------------------------
 // [TestSupport]
@@ -32,11 +38,11 @@ std::wstring CUnitTest::getExecutablePath()
         &localPath[0],
         MAX_PATH
     );
-    int n = localPath.find_last_of('\\');
+    auto n = localPath.find_last_of('\\');
     if (n != std::wstring::npos) localPath.resize(n);
     return localPath;
 #else
-    return filesystem::current_path();
+    return current_path().wstring();
 #endif
 }
 
@@ -48,15 +54,17 @@ std::wstring CUnitTest::getExecutablePath()
 //-----------------------------------------------------------------------------
 std::wstring CUnitTest::getTextFileData(const std::wstring& fileName)
 {
-    std::ifstream file(fileName);
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> fconv;
+    std::ifstream file(fconv.to_bytes(fileName));
+
     if (!file.is_open() )
-        return false;
+        return std::wstring();
     
     std::stringstream buffer;
     buffer << file.rdbuf();
-    typedef std::codecvt_utf8<wchar_t> convert_type;
-    std::wstring_convert<convert_type, wchar_t> converter;
-    return converter.from_bytes(buffer.str());
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> lconv;
+    return lconv.from_bytes(buffer.str());
 }
 
 
@@ -68,17 +76,18 @@ std::wstring CUnitTest::getTextFileData(const std::wstring& fileName)
 std::vector<std::wstring> CUnitTest::getTextFileList(const std::wstring& fileName)
 {
     std::vector<std::wstring> results;
-    std::ifstream file(fileName);
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> fconv;
+    std::ifstream file(fconv.to_bytes(fileName));
     
     if (!file.is_open())
         return results;
 
     std::string line;
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> lconv;
     while (std::getline(file, line))
     {
-        typedef std::codecvt_utf8<wchar_t> convert_type;
-        std::wstring_convert<convert_type, wchar_t> converter;
-        results.push_back(converter.from_bytes(line));
+        results.push_back(lconv.from_bytes(line));
     }
     return results;
 }
@@ -139,7 +148,7 @@ void CUnitTest::setupFolder(const std::wstring& path)
 
     try
     {
-        filesystem::create_directories(path);
+        create_directories(path);
     }
     catch (std::exception &ex)
     {
@@ -156,12 +165,12 @@ void CUnitTest::setupFolder(const std::wstring& path)
 //-----------------------------------------------------------------------------
 void CUnitTest::cleanupFolder(const std::wstring& path)
 {
-    if (!filesystem::exists(path))
+    if (!exists(path))
         return;
 
     try
     {
-        filesystem::remove_all(path);
+        remove_all(path);
     }
     catch (std::exception &ex)
     {
