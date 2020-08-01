@@ -8,11 +8,11 @@
 #include <codecvt>
 
 #ifdef _WIN32
-    #define WIN32_LEAN_AND_MEAN
-    #include <Windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #endif
 
-#if 0 // cpp17
+#if __cplusplus > 201402L // cpp17
 #include <filesystem>
 using namespace std::filesystem;
 #else
@@ -100,11 +100,7 @@ std::vector<std::wstring> CUnitTest::getTextFileList(const std::wstring& fileNam
 //-----------------------------------------------------------------------------
 void CUnitTest::logText(const std::string& text)
 {
-#ifdef _WIN32
-    OutputDebugStringA(text.c_str());
-#else
     std::cout << text;
-#endif
 }
 
 
@@ -115,11 +111,7 @@ void CUnitTest::logText(const std::string& text)
 //-----------------------------------------------------------------------------
 void CUnitTest::logText(const std::wstring& text)
 {
-#ifdef _WIN32
-    OutputDebugStringW(text.c_str());
-#else
     std::wcout << text;
-#endif
 }
 
 
