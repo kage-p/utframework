@@ -9,9 +9,12 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <Windows.h>
 #endif
 
+// Android note: unsupported for Android r21 or lower
+// See https://android.googlesource.com/platform/ndk/+/master/docs/Roadmap.md
 #if __cplusplus > 201402L // cpp17
 #include <filesystem>
 using namespace std::filesystem;
@@ -54,8 +57,8 @@ std::wstring CUnitTest::getExecutablePath()
 //-----------------------------------------------------------------------------
 std::wstring CUnitTest::getTextFileData(const std::wstring& fileName)
 {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> fconv;
-    std::ifstream file(fconv.to_bytes(fileName));
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8cnv;
+    std::ifstream file(utf8cnv.to_bytes(fileName));
 
     if (!file.is_open() )
         return std::wstring();
@@ -63,8 +66,7 @@ std::wstring CUnitTest::getTextFileData(const std::wstring& fileName)
     std::stringstream buffer;
     buffer << file.rdbuf();
 
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> lconv;
-    return lconv.from_bytes(buffer.str());
+    return utf8cnv.from_bytes(buffer.str());
 }
 
 
@@ -77,17 +79,16 @@ std::vector<std::wstring> CUnitTest::getTextFileList(const std::wstring& fileNam
 {
     std::vector<std::wstring> results;
 
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> fconv;
-    std::ifstream file(fconv.to_bytes(fileName));
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8cnv;
+    std::ifstream file(utf8cnv.to_bytes(fileName));
     
     if (!file.is_open())
         return results;
 
     std::string line;
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> lconv;
     while (std::getline(file, line))
     {
-        results.push_back(lconv.from_bytes(line));
+        results.push_back(utf8cnv.from_bytes(line));
     }
     return results;
 }
