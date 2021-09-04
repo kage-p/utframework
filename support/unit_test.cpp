@@ -134,19 +134,22 @@ std::wstring CUnitTest::getTestPath(const std::wstring& base)
 //
 // Cleans and recreates a directory
 //-----------------------------------------------------------------------------
-void CUnitTest::setupFolder(const std::wstring& path)
+bool CUnitTest::setupFolder(const std::wstring& path)
 {
     // clear export folder and recreate
-    cleanupFolder(path);
+    if (!cleanupFolder(path))
+        return false;
 
     try
     {
         create_directories(path);
+        return true;
     }
     catch (std::exception &ex)
     {
         // cannot remove
         std::wcout << L"CUnitTest::setupFolder(): Failed to create directory " << path << ". Error: " << ex.what() << std::endl;
+        return false;
     }
 }
 
@@ -156,19 +159,21 @@ void CUnitTest::setupFolder(const std::wstring& path)
 //
 // Deletes directory contents and the directory itself
 //-----------------------------------------------------------------------------
-void CUnitTest::cleanupFolder(const std::wstring& path)
+bool CUnitTest::cleanupFolder(const std::wstring& path)
 {
     if (!exists(path))
-        return;
+        return true;
 
     try
     {
         remove_all(path);
+        return true;
     }
     catch (std::exception &ex)
     {
         // cannot remove
         std::wcout << L"CUnitTest::cleanupFolder(): Failed to remove directory " << path << ". Error: " << ex.what() << std::endl;
+        return false;
     }
 }
 

@@ -18,8 +18,8 @@ namespace UnitTestSupport
         static void logText(const std::wstring& text);
 
         static std::wstring getTestPath(const std::wstring& base);
-        static void setupFolder(const std::wstring& path);
-        static void cleanupFolder(const std::wstring& path);
+        static bool setupFolder(const std::wstring& path);
+        static bool cleanupFolder(const std::wstring& path);
 
     };
 }
