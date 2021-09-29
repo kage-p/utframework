@@ -98,7 +98,7 @@ std::vector<std::string> CUnitTest::getTextFileList(const std::string& fileName)
 //-----------------------------------------------------------------------------
 void CUnitTest::logText(const std::string& text)
 {
-    std::cout << text;
+    std::cout << text << std::endl;
 }
 
 
@@ -134,7 +134,7 @@ bool CUnitTest::setupFolder(const std::string& path)
     catch (std::exception &ex)
     {
         // cannot remove
-        std::wcout << L"CUnitTest::setupFolder(): Failed to create directory " << path << ". Error: " << ex.what() << std::endl;
+        std::cout << "CUnitTest::setupFolder(): Failed to create directory " << path << ". Error: " << ex.what() << std::endl;
         return false;
     }
 }
@@ -158,7 +158,7 @@ bool CUnitTest::cleanupFolder(const std::string& path)
     catch (std::exception &ex)
     {
         // cannot remove
-        std::wcout << L"CUnitTest::cleanupFolder(): Failed to remove directory " << path << ". Error: " << ex.what() << std::endl;
+        std::cout << "CUnitTest::cleanupFolder(): Failed to remove directory " << path << ". Error: " << ex.what() << std::endl;
         return false;
     }
 }
