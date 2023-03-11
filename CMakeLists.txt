@@ -25,5 +25,3 @@ target_include_directories(${target_name} PRIVATE gmock)
 target_include_directories(${target_name} PRIVATE gtest)
 target_include_directories(${target_name} PUBLIC gmock/include)
 target_include_directories(${target_name} PUBLIC gtest/include)
-
-target_link_libraries(${target_name} eWeatherLib)
