@@ -18,6 +18,8 @@
 #include <filesystem>
 using namespace std::filesystem;
 #else
+// MSVC does not correctly set __cplusplus
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
 using namespace std::experimental::filesystem;
 #endif
