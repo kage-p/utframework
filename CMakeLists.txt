@@ -1,13 +1,21 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.27)
 
-set(target_name UnitTestFramework)
+project(UnitTestFramework
+    VERSION "1.0.0"
+    HOMEPAGE_URL ""
+    DESCRIPTION "Unit Test support framework for C++"
+    LANGUAGES CXX
+)
 
-# ----- compilation settings
+set(target libutfw)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ----- compilation modules
+# Prevent overriding the parent project's compiler/linker settings on Windows
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+add_subdirectory(googletest)
 
 set(headers
     support/unit_test.h
@@ -15,13 +23,11 @@ set(headers
 
 set(sources 
     support/unit_test.cpp
-    gmock/src/gmock-all.cc
-    gtest/src/gtest-all.cc
 )
 
-add_library(${target_name} STATIC ${sources} ${headers})
+add_library(${target} STATIC ${sources} ${headers})
 
-target_include_directories(${target_name} PRIVATE gmock)
-target_include_directories(${target_name} PRIVATE gtest)
-target_include_directories(${target_name} PUBLIC gmock/include)
-target_include_directories(${target_name} PUBLIC gtest/include)
+target_include_directories(${target} PRIVATE gmock)
+target_include_directories(${target} PRIVATE gtest)
+target_include_directories(${target} PUBLIC googletest/googlemock/include)
+target_include_directories(${target} PUBLIC googletest/googletest/include)
