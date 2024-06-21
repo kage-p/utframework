@@ -27,6 +27,9 @@ set(sources
 
 add_library(${target} STATIC ${sources} ${headers})
 
+target_link_libraries(${target} gmock)
+target_link_libraries(${target} gtest_main)
+
 target_include_directories(${target} PRIVATE gmock)
 target_include_directories(${target} PRIVATE gtest)
 target_include_directories(${target} PUBLIC googletest/googlemock/include)
