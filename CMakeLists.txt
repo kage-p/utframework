@@ -33,4 +33,4 @@ target_include_directories(${target} PRIVATE gtest)
 # public paths
 target_include_directories(${target} PUBLIC googletest/googlemock/include)
 target_include_directories(${target} PUBLIC googletest/googletest/include)
-target_include_directories(${target} PUBLIC include/utfw)
+target_include_directories(${target} PUBLIC include)
