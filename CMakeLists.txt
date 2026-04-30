@@ -17,12 +17,9 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 add_subdirectory(googletest)
 
-set(headers
-    support/unit_test.h
-)
-
-set(sources 
-    support/unit_test.cpp
+set(files
+    include/utfw/unit_test.h
+    src/unit_test.cpp
 )
 
 add_library(${target} STATIC ${sources} ${headers})
@@ -32,5 +29,8 @@ target_link_libraries(${target} gtest_main)
 
 target_include_directories(${target} PRIVATE gmock)
 target_include_directories(${target} PRIVATE gtest)
+
+# public paths
 target_include_directories(${target} PUBLIC googletest/googlemock/include)
 target_include_directories(${target} PUBLIC googletest/googletest/include)
+target_include_directories(${target} PUBLIC include/utfw)
