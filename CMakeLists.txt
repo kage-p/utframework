@@ -22,7 +22,7 @@ set(files
     src/unit_test.cpp
 )
 
-add_library(${target} STATIC ${sources} ${headers})
+add_library(${target} STATIC ${files})
 
 target_link_libraries(${target} gmock)
 target_link_libraries(${target} gtest_main)
